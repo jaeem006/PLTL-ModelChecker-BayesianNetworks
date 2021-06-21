@@ -71,6 +71,9 @@ chain bn (x:xs) = (prob bn (Left x) xs) * (chain bn xs)
 prob :: BayesianNetwork -> Event -> Cond -> Proba
 prob bn (Left (Neg p)) cond = 1 - prob bn (Left (Pos p)) cond
 prob bn (Left (Pos p)) cond = let n = getNode bn p in srchP n (genCond cond (parents n))
+-- prob bn (Left (Pos p)) cond 
+--  | null cond = let n = getNode bn p in srchP n (genCond cond (parents n))
+--  | otherwise = prob bn (Right (Pos p:cond)) [] / prob bn (Right cond) []
 prob bn (Right ps) cond
  | null cond = chain bn ps 
  | otherwise = chain bn (ps++cond) / chain bn cond 
