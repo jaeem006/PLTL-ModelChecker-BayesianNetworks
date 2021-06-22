@@ -2,8 +2,6 @@ module Ltl where
 import Data.List
 import BBN
 
-main = putStrLn "Hello World"
-
 data State = State { lb::Int, bayes::BayesianNetwork }
 instance Show State where
     show = show.lb 

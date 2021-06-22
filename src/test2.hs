@@ -54,4 +54,5 @@ m1 = Model{
     next=t
 }
 
--- mcALTL m1 (s1,[P 0 (A (Pos "homicida"))])
+-- mcALTL m1 (s1,[P 0 (A (Pos "homicida"))]) valor esperado: 0.01
+-- mcALTL m1 (s1, [(P 0 (M [(Pos "cuchillo"),(Neg "sangre"),(Neg "homicida")] []))]) valor esperado: 0.2275
