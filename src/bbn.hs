@@ -5,7 +5,7 @@ import Data.List
 type Proba = Float
 type Var = String
 
-data Atom = Neg Var | Pos Var deriving(Show, Eq)
+data Atom = Neg Var | Pos Var deriving(Show, Eq, Ord)
 type Event = Either Atom [Atom] 
 type Cond = [Atom]
 
@@ -55,13 +55,14 @@ getByFst ((x,p):xs) e v
 srchP :: Node -> Cond -> Proba
 srchP n c = getByFst (proba n) c 0
 
-srchNode :: [Node] -> Var -> Node
+srchNode :: [Node] -> Var -> Maybe Node
+srchNode [] _ = Nothing
 srchNode (n:ns) v
- | label n == v = n
+ | label n == v = Just n
  | otherwise = srchNode ns v 
 
-getNode :: BayesianNetwork -> Var -> Node
-getNode bn v = srchNode ns v
+getNode :: BayesianNetwork -> Var -> Maybe Node
+getNode bn v = srchNode ns v 
  where ns = nodes bn
 
 chain :: BayesianNetwork -> [Atom] -> Proba
@@ -70,7 +71,9 @@ chain bn (x:xs) = (prob bn (Left x) xs) * (chain bn xs)
 
 prob :: BayesianNetwork -> Event -> Cond -> Proba
 prob bn (Left (Neg p)) cond = 1 - prob bn (Left (Pos p)) cond
-prob bn (Left (Pos p)) cond = let n = getNode bn p in srchP n (genCond cond (parents n))
+prob bn (Left (Pos p)) cond = case getNode bn p of
+    Just n -> srchP n (genCond cond (parents n))
+    Nothing -> 0
 -- prob bn (Left (Pos p)) cond 
 --  | null cond = let n = getNode bn p in srchP n (genCond cond (parents n))
 --  | otherwise = prob bn (Right (Pos p:cond)) [] / prob bn (Right cond) []
