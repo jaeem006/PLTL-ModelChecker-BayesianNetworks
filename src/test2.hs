@@ -1,25 +1,28 @@
 import BBN
+import Ltl
+
+-- Definición de la Red Bayesiana 
 
 homicida :: Node
 homicida = Node {
-	label="homicida",
-	parents=[],
-	proba=[([],0.01)]
+    label="homicida",
+    parents=[],
+    proba=[([],0.01)]
 }
 
 sangre :: Node
 sangre = Node {
-	label="sangre",
-	parents=["homicida"],
-	proba=[([Pos "homicida"], 0.8),
+    label="sangre",
+    parents=["homicida"],
+    proba=[([Pos "homicida"], 0.8),
             ([Neg "homicida"], 0.1)]
 }
 
 cuchillo :: Node
 cuchillo = Node {
-	label="cuchillo",
-	parents=["homicida"],
-	proba=[([Pos "homicida"], 0.85),
+    label="cuchillo",
+    parents=["homicida"],
+    proba=[([Pos "homicida"], 0.85),
             ([Neg "homicida"], 0.25)]
 }
 
@@ -30,7 +33,25 @@ trans2 "cuchillo" = []
 
 bn1 :: BayesianNetwork 
 bn1 = BayesianNetwork {
-	trans=trans2,
-	nodes=[homicida,sangre,cuchillo]
+    trans=trans2,
+    nodes=[homicida,sangre,cuchillo]
 }
 
+-- Definición del modelo de Kripke 
+
+s1::State
+s1 = State{lb=0,bayes=bn1}
+
+s2::State
+s2 = State{lb=1,bayes=bn1}
+
+t::Int -> [State]
+t 1 = [s2]
+t 2 = []
+
+m1::Model
+m1 = Model{
+    next=t
+}
+
+-- mcALTL m1 (s1,[P 0 (A (Pos "homicida"))])

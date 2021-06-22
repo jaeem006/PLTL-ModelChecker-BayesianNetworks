@@ -1,5 +1,8 @@
+module Ltl where
 import Data.List
 import BBN
+
+main = putStrLn "Hello World"
 
 data State = State { lb::Int, bayes::BayesianNetwork }
 instance Show State where
@@ -41,7 +44,7 @@ bot :: Form
 bot = P 1.1 $ A (Pos "")
 
 data Model = Model {
-  next :: State -> [State]
+  next :: Int -> [State]
   -- atomic :: State -> Atomic -> Bool
  }
 
@@ -78,7 +81,7 @@ goals m (s,P pr (M e c):fs) = if prob (bayes s) (Right e) c >= pr then T else Go
 -- goals m (s,Neg x:fs) = if not (atomic m s x) then T else goals m (s,fs)
 goals m (s,Disy p q:fs) = Goal [(s,p:q:fs)]
 goals m (s,Conj p q:fs) =  Goal $ (nub.sort) [(s,p:fs),(s,q:fs)]
-goals m (s,X p:fs) = let ps = map foo (p:fs) in Goal [(s',ps) | s' <- next m s ]
+goals m (s,X p:fs) = let ps = map foo (p:fs) in Goal [(s',ps) | s' <- next m (lb s) ]
 goals m (s,F p:fs) = goals m (s,U top p:fs)
 goals m (s,G p:fs) = goals m (s,R bot p:fs)
 goals m (s,U p q:fs) = if p == q then Goal [(s,p:fs)] else Goal [(s,p:q:fs),(s,q:X (U p q):fs)]
