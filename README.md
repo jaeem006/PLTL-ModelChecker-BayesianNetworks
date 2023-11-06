@@ -2,7 +2,6 @@
 ## :rocket: Proyecto: Verificador de Modelos Probabilistico para LTL (PLTL)
 **Maestría en Ciencia e Ingeniería de la Computación, UNAM**   
 *Javier Enríquez Mendoza*   
-*Manuel Soto Romero*   
 
 <img src="images/portada.jpeg" width="100%" height="10%">
 
